@@ -11,7 +11,6 @@ class TestMail extends Mailable
     {
         return new Content(
             view: null,
-
             text: 'testing'
         );
     }

@@ -10,14 +10,13 @@ use Motomedialab\Smtp2Go\Exceptions\Smtp2GoException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\SentMessage;
-use Symfony\Component\Mailer\Transport\BaseTransport;
+use Symfony\Component\Mailer\Transport\AbstractTransport;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\MessageConverter;
 use Symfony\Component\Mime\Part\DataPart;
 
-class Smtp2GoTransport extends BaseTransport
+class Smtp2GoTransport extends AbstractTransport
 {
-
     protected array $config;
 
     protected string $endpoint = 'https://api.smtp2go.com/v3/email/send';

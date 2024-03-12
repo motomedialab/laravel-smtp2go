@@ -1,11 +1,16 @@
 # Laravel SMTP2Go Mail Transport Driver
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/motomedialab/smtp2go.svg?style=flat-square)](https://packagist.org/packages/motomedialab/smtp2go)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/motomedialab/smtp2go/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/motomedialab/smtp2go/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/motomedialab/smtp2go/code-style.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/motomedialab/smtp2go/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/motomedialab/smtp2go.svg?style=flat-square)](https://packagist.org/packages/motomedialab/smtp2go)
+
 Integrate SMTP2Go directly into your application using SMTP2Go's API
 
 ### Installation
 
 ```bash
-composer require motomedialab/smtp2go
+composer require motomedialab/laravel-smtp2go
 ```
 
 ### Configuration

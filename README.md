@@ -5,7 +5,7 @@ Integrate SMTP2Go directly into your application using SMTP2Go's API
 ### Installation
 
 ```bash
-composer require motomedialab/smtp2go
+composer require motomedialab/laravel-smtp2go
 ```
 
 ### Configuration

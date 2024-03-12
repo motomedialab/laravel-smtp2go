@@ -1,9 +1,10 @@
-name: Fix PHP code style issues
+name: code-style
 
 on:
   push:
-    paths:
-      - '**.php'
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: write

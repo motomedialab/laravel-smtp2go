@@ -1,6 +1,7 @@
 {
     "name": "motomedialab/smtp2go",
     "type": "library",
+    "license": "MIT",
     "description": "Send emails via API using the first-class email courier SMTP2Go",
     "require": {
         "php": "^8.1",

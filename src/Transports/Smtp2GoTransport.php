@@ -21,7 +21,7 @@ class Smtp2GoTransport extends AbstractTransport
 
     protected string $endpoint = 'https://api.smtp2go.com/v3/email/send';
 
-    public function __construct(EventDispatcherInterface $dispatcher = null, LoggerInterface $logger = null)
+    public function __construct(?EventDispatcherInterface $dispatcher = null, ?LoggerInterface $logger = null)
     {
         parent::__construct($dispatcher, $logger);
 

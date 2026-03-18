@@ -26,11 +26,7 @@ class EmailCanBeSentTest extends TestCase
         ]);
     }
 
-
-    /**
-     * @test
-     */
-    public function smtp2go_mail_driver_makes_request_to_api()
+    public function test_smtp2go_mail_driver_makes_request_to_api()
     {
         Http::fake([
             '*' => Http::response([
@@ -53,6 +49,4 @@ class EmailCanBeSentTest extends TestCase
             && $request['subject'] === 'test'
             && $request['text_body'] === 'Testing');
     }
-
-
 }

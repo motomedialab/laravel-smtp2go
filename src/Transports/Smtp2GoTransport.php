@@ -21,7 +21,7 @@ class Smtp2GoTransport extends AbstractTransport
 
     protected string $endpoint = 'https://api.smtp2go.com/v3/email/send';
 
-    public function __construct(EventDispatcherInterface $dispatcher = null, LoggerInterface $logger = null)
+    public function __construct(?EventDispatcherInterface $dispatcher = null, ?LoggerInterface $logger = null)
     {
         parent::__construct($dispatcher, $logger);
 
@@ -40,7 +40,7 @@ class Smtp2GoTransport extends AbstractTransport
 
         // build our data to send to the API.
         $data = collect([
-            'api_key' => config("mail.mailers.smtp2go.api_key"),
+            'api_key' => config('mail.mailers.smtp2go.api_key'),
             'to' => $this->sanitiseAddresses($email->getTo())->all(),
             'cc' => $this->sanitiseAddresses($email->getCc())->all(),
             'bcc' => $this->sanitiseAddresses($email->getBcc())->all(),
@@ -52,7 +52,7 @@ class Smtp2GoTransport extends AbstractTransport
                 [
                     'header' => 'Reply-To',
                     'value' => $this->sanitiseAddresses($email->getReplyTo())->first(),
-                ]
+                ],
             ])->filter(fn ($value) => $value['value'])->all(),
             'attachments' => collect($email->getAttachments())->map(fn (DataPart $attachment) => [
                 'filename' => $attachment->getFilename(),
@@ -63,8 +63,8 @@ class Smtp2GoTransport extends AbstractTransport
 
         $response = Http::timeout(60)->post($this->endpoint, $data);
 
-        if (!$response->successful() || $response->json('data.succeeded') < 1) {
-            throw Smtp2GoException::make('Failed to send via ' . $this . ' transport', $response->status())
+        if (! $response->successful() || $response->json('data.succeeded') < 1) {
+            throw Smtp2GoException::make('Failed to send via '.$this.' transport', $response->status())
                 ->setContext(['data' => $data, 'error' => $response->json()]);
         }
     }

@@ -67,6 +67,23 @@ class Smtp2GoTransport extends AbstractTransport
             throw Smtp2GoException::make('Failed to send via '.$this.' transport', $response->status())
                 ->setContext(['data' => $data, 'error' => $response->json()]);
         }
+
+        $this->recordMessageId($message, $response->json('data.email_id'));
+    }
+
+    /**
+     * Record the identifier SMTP2Go assigned to the sent message.
+     *
+     * This is the value SMTP2Go echoes back on its delivery webhooks, so it is
+     * the only way to tie a webhook event to the send that produced it. Storing
+     * it on the SentMessage follows the Symfony convention and surfaces it on
+     * Laravel's MessageSent event via $event->sent->getMessageId().
+     */
+    protected function recordMessageId(SentMessage $message, mixed $emailId): void
+    {
+        if (is_string($emailId) && $emailId !== '') {
+            $message->setMessageId($emailId);
+        }
     }
 
     /**

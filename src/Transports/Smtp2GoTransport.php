@@ -40,7 +40,6 @@ class Smtp2GoTransport extends AbstractTransport
 
         // build our data to send to the API.
         $data = collect([
-            'api_key' => config('mail.mailers.smtp2go.api_key'),
             'to' => $this->sanitiseAddresses($email->getTo())->all(),
             'cc' => $this->sanitiseAddresses($email->getCc())->all(),
             'bcc' => $this->sanitiseAddresses($email->getBcc())->all(),
@@ -61,11 +60,17 @@ class Smtp2GoTransport extends AbstractTransport
             ])->all(),
         ])->filter()->all();
 
-        $response = Http::timeout(60)->post($this->endpoint, $data);
+        $response = Http::timeout(60)
+            ->withHeaders(['X-Smtp2go-Api-Key' => (string) config('mail.mailers.smtp2go.api_key')])
+            ->post($this->endpoint, $data);
 
         if (! $response->successful() || $response->json('data.succeeded') < 1) {
             throw Smtp2GoException::make('Failed to send via '.$this.' transport', $response->status())
-                ->setContext(['data' => $data, 'error' => $response->json()]);
+                ->setContext([
+                    'status' => $response->status(),
+                    'data' => $this->summarisePayload($data),
+                    'error' => $response->json(),
+                ]);
         }
 
         $this->recordMessageId($message, $response->json('data.email_id'));
@@ -84,6 +89,31 @@ class Smtp2GoTransport extends AbstractTransport
         if (is_string($emailId) && $emailId !== '') {
             $message->setMessageId($emailId);
         }
+    }
+
+    /**
+     * Summarise the payload for the exception context of a failed send.
+     *
+     * Laravel merges an exception's context into its log entry, so this is an
+     * allowlist of metadata that helps diagnose a failure without writing the
+     * message content, recipient addresses or attachment data to the logs.
+     */
+    protected function summarisePayload(array $data): array
+    {
+        return [
+            'sender' => $data['sender'] ?? null,
+            'subject' => $data['subject'] ?? null,
+            'recipients' => [
+                'to' => count($data['to'] ?? []),
+                'cc' => count($data['cc'] ?? []),
+                'bcc' => count($data['bcc'] ?? []),
+            ],
+            'attachments' => array_map(fn (array $attachment): array => [
+                'filename' => $attachment['filename'],
+                'mimetype' => $attachment['mimetype'],
+                'size' => strlen(base64_decode($attachment['fileblob'])),
+            ], $data['attachments'] ?? []),
+        ];
     }
 
     /**
